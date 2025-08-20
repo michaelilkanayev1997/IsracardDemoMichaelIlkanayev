@@ -10,6 +10,7 @@ import ErrorState from "@/components/ErrorState";
 import EmptyState from "@/components/EmptyState";
 import SearchBar from "@/components/SearchBar";
 import Header from "@/components/Header";
+import colors from "@/constants/colors";
 
 const BooksScreen: FC = () => {
   const { data, isLoading, isError, refetch } = useGetBooksQuery();
@@ -62,7 +63,11 @@ const BooksScreen: FC = () => {
                   {item.title}
                 </Text>
                 <View style={styles.dateRow}>
-                  <Ionicons name="calendar-outline" size={16} color="#6B7280" />
+                  <Ionicons
+                    name="calendar-outline"
+                    size={16}
+                    color={colors.TEXT_SECONDARY}
+                  />
                   <Text style={styles.release}>{item.releaseDate}</Text>
                 </View>
               </View>
@@ -77,14 +82,14 @@ const BooksScreen: FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F8FAFC",
+    backgroundColor: colors.BACKGROUND,
   },
   listContent: {
     padding: 16,
   },
   card: {
     flexDirection: "row",
-    backgroundColor: "#FFFFFF",
+    backgroundColor: colors.SURFACE,
     borderRadius: 12,
     padding: 12,
     marginBottom: 14,
@@ -108,7 +113,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: Platform.OS === "ios" ? "600" : "bold",
-    color: "#111827",
+    color: colors.TEXT_PRIMARY,
     marginBottom: 6,
   },
   dateRow: {
@@ -118,7 +123,7 @@ const styles = StyleSheet.create({
   },
   release: {
     fontSize: 14,
-    color: "#6B7280",
+    color: colors.TEXT_SECONDARY,
     marginLeft: 6,
   },
 });

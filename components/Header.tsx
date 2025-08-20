@@ -1,14 +1,10 @@
-import { Ionicons } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
 import { FC } from "react";
-import {
-  ActivityIndicator,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { StyleSheet, Text, View } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { Ionicons } from "@expo/vector-icons";
+
+import colors from "@/constants/colors";
 
 interface HeaderProps {
   count: number;
@@ -17,13 +13,17 @@ interface HeaderProps {
 const Header: FC<HeaderProps> = ({ count }) => {
   return (
     <LinearGradient
-      colors={["#1E40AF", "#3B82F6"]}
+      colors={[colors.PRIMARY_DARK, colors.PRIMARY_LIGHT]}
       style={styles.headerGradient}
     >
       <SafeAreaView edges={["top", "left", "right"]} style={styles.header}>
         <View style={styles.headerContent}>
           <View style={styles.titleContainer}>
-            <Ionicons name="book-outline" size={28} color="#FFFFFF" />
+            <Ionicons
+              name="book-outline"
+              size={28}
+              color={colors.TEXT_INVERSE}
+            />
             <Text style={styles.title}>Books</Text>
           </View>
           <Text style={styles.subtitle}>
@@ -58,12 +58,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#FFFFFF",
+    color: colors.TEXT_INVERSE,
     marginLeft: 10,
   },
   subtitle: {
     fontSize: 14,
-    color: "#E0E7FF",
+    color: colors.TEXT_INVERSE_MUTED,
     marginLeft: 38,
   },
 });
