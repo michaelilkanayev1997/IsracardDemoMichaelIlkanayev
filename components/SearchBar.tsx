@@ -3,19 +3,23 @@ import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 
 import colors from "@/constants/colors";
+import { hapticPress } from "@/utils/HapticFeedback";
 
 interface SearchBarProps {
   searchTerm: string;
   onSearchChange: (text: string) => void;
   onClear: () => void;
+  placeholder?: string;
 }
 
 const SearchBar: FC<SearchBarProps> = ({
   searchTerm,
   onSearchChange,
   onClear,
+  placeholder = "Search...",
 }) => {
   const handleClear = () => {
+    hapticPress();
     onClear();
   };
 
@@ -32,7 +36,7 @@ const SearchBar: FC<SearchBarProps> = ({
           style={styles.searchInput}
           value={searchTerm}
           onChangeText={onSearchChange}
-          placeholder="Search applications..."
+          placeholder={placeholder}
           placeholderTextColor={colors.TEXT_MUTED}
           returnKeyType="search"
         />
@@ -70,7 +74,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 14,
     color: colors.TEXT_PRIMARY,
-    paddingVertical: 4,
+    paddingVertical: 5,
     fontWeight: "500",
   },
   clearButton: {

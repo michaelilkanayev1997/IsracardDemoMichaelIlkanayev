@@ -34,6 +34,7 @@ const BooksScreen: FC = () => {
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
         onClear={() => setSearchTerm("")}
+        placeholder="Search books..."
       />
 
       {/* Main content */}
