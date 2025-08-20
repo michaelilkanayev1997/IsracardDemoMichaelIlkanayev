@@ -1,6 +1,8 @@
+import { FC } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { FC } from "react";
+
+import colors from "@/constants/colors";
 
 interface ErrorStateProps {
   message?: string;
@@ -13,7 +15,7 @@ const ErrorState: FC<ErrorStateProps> = ({
 }) => {
   return (
     <View style={styles.center}>
-      <Ionicons name="alert-circle" size={32} color="red" />
+      <Ionicons name="alert-circle" size={32} color={colors.ERROR} />
       <Text style={styles.errorText}>{message}</Text>
       {onRetry && (
         <TouchableOpacity onPress={onRetry} style={styles.retryBtn}>
@@ -35,17 +37,17 @@ const styles = StyleSheet.create({
     marginTop: 8,
     fontSize: 16,
     fontWeight: "500",
-    color: "red",
+    color: colors.ERROR,
   },
   retryBtn: {
     marginTop: 12,
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 8,
-    backgroundColor: "#3B82F6",
+    backgroundColor: colors.PRIMARY_LIGHT,
   },
   retryText: {
-    color: "#fff",
+    color: colors.SURFACE,
     fontWeight: "600",
   },
 });
