@@ -3,7 +3,7 @@ import { StyleSheet, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FlashList } from "@shopify/flash-list";
 import { Link } from "expo-router";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { useGetBooksQuery } from "@/slices/booksApiSlice";
 import { RootState } from "@/store/store";
@@ -16,8 +16,10 @@ import BookCard from "@/components/BookCard";
 import colors from "@/constants/colors";
 import { hapticPress } from "@/utils/HapticFeedback";
 import useDebouncedValue from "@/hooks/useDebouncedValue";
+import { toggleFavorite } from "@/slices/favoritesSlice";
 
 const FavoritesScreen: FC = () => {
+  const dispatch = useDispatch();
   const favoriteIds = useSelector((state: RootState) => state.favorites.ids);
   const { data: books = [], isLoading, isError, refetch } = useGetBooksQuery();
 
@@ -80,7 +82,11 @@ const FavoritesScreen: FC = () => {
           renderItem={({ item }) => (
             <Link href={`/book/${item.index}`} asChild>
               <TouchableOpacity activeOpacity={0.7} onPress={hapticPress}>
-                <BookCard book={item} />
+                <BookCard
+                  book={item}
+                  favorite={true}
+                  onToggleFavorite={() => dispatch(toggleFavorite(item.index))}
+                />
               </TouchableOpacity>
             </Link>
           )}
