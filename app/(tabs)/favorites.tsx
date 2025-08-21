@@ -15,27 +15,31 @@ import EmptyState from "@/components/EmptyState";
 import BookCard from "@/components/BookCard";
 import colors from "@/constants/colors";
 import { hapticPress } from "@/utils/HapticFeedback";
+import useDebouncedValue from "@/hooks/useDebouncedValue";
 
 const FavoritesScreen: FC = () => {
   const favoriteIds = useSelector((state: RootState) => state.favorites.ids);
   const { data: books = [], isLoading, isError, refetch } = useGetBooksQuery();
 
   const [searchTerm, setSearchTerm] = useState("");
+  const debounced = useDebouncedValue(searchTerm, 300);
 
   const favoriteBooks = useMemo(() => {
     if (!books?.length || !favoriteIds.length) return [];
+
     return books.filter((b) => favoriteIds.includes(b.index));
   }, [books, favoriteIds]);
 
   const filteredBooks = useMemo(() => {
-    if (!searchTerm.trim()) return favoriteBooks;
-    const query = searchTerm.toLowerCase();
+    const query = debounced.toLowerCase().trim();
+    if (!query) return favoriteBooks;
+
     return favoriteBooks.filter(
       (book) =>
         book.title.toLowerCase().includes(query) ||
         book.description.toLowerCase().includes(query)
     );
-  }, [favoriteBooks, searchTerm]);
+  }, [favoriteBooks, debounced]);
 
   return (
     <SafeAreaView style={styles.container} edges={["top", "left", "right"]}>
