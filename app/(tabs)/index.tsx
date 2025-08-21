@@ -13,18 +13,22 @@ import Header from "@/components/Header";
 import colors from "@/constants/colors";
 import BookCard from "@/components/BookCard";
 import { hapticPress } from "@/utils/HapticFeedback";
+import useDebouncedValue from "@/hooks/useDebouncedValue";
 
 const BooksScreen: FC = () => {
   const { data, isLoading, isError, refetch } = useGetBooksQuery();
 
   const [searchTerm, setSearchTerm] = useState("");
+  const debounced = useDebouncedValue(searchTerm, 300);
 
   const filteredBooks = useMemo(() => {
     if (!data) return [];
-    return data.filter((book) =>
-      book.title.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }, [data, searchTerm]);
+
+    const query = debounced.toLowerCase().trim();
+    if (!query) return data;
+
+    return data.filter((book) => book.title.toLowerCase().includes(query));
+  }, [data, debounced]);
 
   return (
     <SafeAreaView style={styles.container} edges={["top", "left", "right"]}>
