@@ -1,7 +1,8 @@
 import { FC, useMemo, useState } from "react";
 import { FlashList } from "@shopify/flash-list";
-import { StyleSheet } from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Link } from "expo-router";
 
 import { useGetBooksQuery } from "@/slices/booksApiSlice";
 import Loader from "@/components/Loader";
@@ -11,6 +12,7 @@ import SearchBar from "@/components/SearchBar";
 import Header from "@/components/Header";
 import colors from "@/constants/colors";
 import BookCard from "@/components/BookCard";
+import { hapticPress } from "@/utils/HapticFeedback";
 
 const BooksScreen: FC = () => {
   const { data, isLoading, isError, refetch } = useGetBooksQuery();
@@ -56,7 +58,13 @@ const BooksScreen: FC = () => {
               icon="book-outline"
             />
           }
-          renderItem={({ item }) => <BookCard book={item} />}
+          renderItem={({ item }) => (
+            <Link href={`/book/${item.index}`} asChild>
+              <TouchableOpacity activeOpacity={0.7} onPress={hapticPress}>
+                <BookCard book={item} />
+              </TouchableOpacity>
+            </Link>
+          )}
         />
       )}
     </SafeAreaView>
