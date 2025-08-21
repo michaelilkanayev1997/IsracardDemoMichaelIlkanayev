@@ -1,4 +1,4 @@
-import { FC, useMemo, useState } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import { FlashList } from "@shopify/flash-list";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -14,21 +14,45 @@ import colors from "@/constants/colors";
 import BookCard from "@/components/BookCard";
 import { hapticPress } from "@/utils/HapticFeedback";
 import useDebouncedValue from "@/hooks/useDebouncedValue";
+import { filterBooks } from "@/utils/helper";
+import { setCachedBooks } from "@/slices/booksSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+
+const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
 
 const BooksScreen: FC = () => {
-  const { data, isLoading, isError, refetch } = useGetBooksQuery();
+  const dispatch = useDispatch();
+  const { cachedBooks, lastFetched } = useSelector(
+    (state: RootState) => state.books
+  );
+
+  const expired = !lastFetched || Date.now() - lastFetched > TWENTY_FOUR_HOURS;
+
+  // only fetch if expired
+  const { data, isLoading, isError, refetch } = useGetBooksQuery(undefined, {
+    skip: !expired,
+  });
+
+  // whenever fresh data arrives, update cache
+  useEffect(() => {
+    if (data) {
+      dispatch(setCachedBooks(data));
+    }
+  }, [data, dispatch]);
+
+  // prefer cache if exists, else fallback to query data
+  const booksToShow = cachedBooks.length ? cachedBooks : data ?? [];
 
   const [searchTerm, setSearchTerm] = useState("");
+
   const debounced = useDebouncedValue(searchTerm, 300);
 
-  const filteredBooks = useMemo(() => {
-    if (!data) return [];
-
-    const query = debounced.toLowerCase().trim();
-    if (!query) return data;
-
-    return data.filter((book) => book.title.toLowerCase().includes(query));
-  }, [data, debounced]);
+  // Filtering Books
+  const filteredBooks = useMemo(
+    () => filterBooks(booksToShow ?? [], debounced),
+    [data, debounced]
+  );
 
   return (
     <SafeAreaView style={styles.container} edges={["top", "left", "right"]}>
