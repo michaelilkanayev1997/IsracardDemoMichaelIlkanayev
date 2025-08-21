@@ -12,9 +12,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 
-import { toggleFavorite } from "@/slices/favoritesSlice";
+import { toggleFavorite } from "@/slices/booksSlice";
 import colors from "@/constants/colors";
-import { useGetBooksQuery } from "@/slices/booksApiSlice";
 import Loader from "@/components/Loader";
 import ErrorState from "@/components/ErrorState";
 import { hapticPress } from "@/utils/HapticFeedback";
@@ -24,20 +23,19 @@ const BookDetails: FC = () => {
   const { id } = useLocalSearchParams();
   const dispatch = useDispatch();
 
-  const favorites = useSelector((state: RootState) => state.favorites.ids);
+  const { cachedBooks, favorites, lastFetched } = useSelector(
+    (state: RootState) => state.books
+  );
 
-  const { data: books = [], isLoading, error } = useGetBooksQuery();
-
-  const book = books?.find((book) => book.index.toString() === id);
-
+  const book = cachedBooks.find((book) => book.index.toString() === id);
   const isFavorite = favorites.includes(Number(id));
 
   return (
     <SafeAreaView style={styles.screen}>
-      {isLoading ? (
+      {!lastFetched ? (
         <Loader message="Loading book details..." />
-      ) : error || !book ? (
-        <ErrorState message="Failed to load book details" />
+      ) : !book ? (
+        <ErrorState message="Book not found in cache" />
       ) : (
         <ScrollView
           contentContainerStyle={styles.container}
