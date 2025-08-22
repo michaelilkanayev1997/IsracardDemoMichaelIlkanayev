@@ -10,7 +10,7 @@ import Loader from "@/components/Loader";
 import ErrorState from "@/components/ErrorState";
 import EmptyState from "@/components/EmptyState";
 import SearchBar from "@/components/SearchBar";
-import Header from "@/components/Header";
+import Header, { ViewModeOptions } from "@/components/Header";
 import colors from "@/constants/colors";
 import BookCard from "@/components/BookCard";
 import { hapticPress } from "@/utils/HapticFeedback";
@@ -30,6 +30,7 @@ const BooksScreen: FC = () => {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState<SortOption>("title");
+  const [viewMode, setViewMode] = useState<ViewModeOptions>("list");
   const debounced = useDebouncedValue(searchTerm, 300);
 
   const expired = !lastFetched || Date.now() - lastFetched > TWENTY_FOUR_HOURS;
@@ -68,6 +69,8 @@ const BooksScreen: FC = () => {
         count={sortedBooks.length}
         sortBy={sortBy}
         onSortChange={setSortBy}
+        viewMode={viewMode}
+        onToggleView={() => setViewMode(viewMode === "list" ? "grid" : "list")}
       />
 
       {/* SearchBar */}
@@ -85,6 +88,8 @@ const BooksScreen: FC = () => {
         <ErrorState message="Failed to load books" onRetry={() => refetch()} />
       ) : (
         <FlashList
+          key={viewMode}
+          numColumns={viewMode === "grid" ? 2 : 1}
           data={sortedBooks}
           keyExtractor={(item) => item.index.toString()}
           estimatedItemSize={140}
@@ -100,8 +105,12 @@ const BooksScreen: FC = () => {
           }
           renderItem={({ item }) => (
             <Link href={`/book/${item.index}`} asChild>
-              <TouchableOpacity activeOpacity={0.7} onPress={hapticPress}>
-                <BookCard book={item} />
+              <TouchableOpacity
+                activeOpacity={0.7}
+                onPress={hapticPress}
+                style={viewMode === "grid" && styles.gridItem}
+              >
+                <BookCard book={item} viewMode={viewMode} />
               </TouchableOpacity>
             </Link>
           )}
@@ -118,6 +127,9 @@ const styles = StyleSheet.create({
   },
   listContent: {
     padding: 16,
+  },
+  gridItem: {
+    marginHorizontal: 6,
   },
 });
 
