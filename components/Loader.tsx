@@ -1,17 +1,21 @@
 import { FC } from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 
-import colors from "@/constants/colors";
+import useTheme from "@/hooks/useTheme";
 
 interface LoaderProps {
   message?: string;
 }
 
 const Loader: FC<LoaderProps> = ({ message = "Loading..." }) => {
+  const { theme } = useTheme();
+
   return (
     <View style={styles.center}>
-      <ActivityIndicator size="large" color={colors.PRIMARY_LIGHT} />
-      <Text style={styles.loadingText}>{message}</Text>
+      <ActivityIndicator size="large" color={theme.PRIMARY_LIGHT} />
+      <Text style={[styles.loadingText, { color: theme.TEXT_SECONDARY }]}>
+        {message}
+      </Text>
     </View>
   );
 };
@@ -26,7 +30,6 @@ const styles = StyleSheet.create({
   loadingText: {
     marginTop: 10,
     fontSize: 14,
-    color: colors.TEXT_SECONDARY,
   },
 });
 

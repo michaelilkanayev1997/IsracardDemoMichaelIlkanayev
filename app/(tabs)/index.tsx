@@ -10,8 +10,7 @@ import Loader from "@/components/Loader";
 import ErrorState from "@/components/ErrorState";
 import EmptyState from "@/components/EmptyState";
 import SearchBar from "@/components/SearchBar";
-import Header from "@/components/Header";
-import colors from "@/constants/colors";
+import Header, { ViewModeOptions } from "@/components/Header";
 import BookCard from "@/components/BookCard";
 import { hapticPress } from "@/utils/HapticFeedback";
 import useDebouncedValue from "@/hooks/useDebouncedValue";
@@ -19,17 +18,21 @@ import { SortOption } from "@/components/SortMenu";
 import { filterBooks, sortBooks } from "@/utils/helper";
 import { setCachedBooks } from "@/slices/booksSlice";
 import { RootState } from "@/store/store";
+import useTheme from "@/hooks/useTheme";
 
 const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
 
 const BooksScreen: FC = () => {
   const dispatch = useDispatch();
+  const { theme } = useTheme();
+
   const { cachedBooks, lastFetched } = useSelector(
     (state: RootState) => state.books
   );
 
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState<SortOption>("title");
+  const [viewMode, setViewMode] = useState<ViewModeOptions>("list");
   const debounced = useDebouncedValue(searchTerm, 300);
 
   const expired = !lastFetched || Date.now() - lastFetched > TWENTY_FOUR_HOURS;
@@ -62,12 +65,17 @@ const BooksScreen: FC = () => {
   );
 
   return (
-    <SafeAreaView style={styles.container} edges={["top", "left", "right"]}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: theme.BACKGROUND }]}
+      edges={["top", "left", "right"]}
+    >
       {/* Header */}
       <Header
         count={sortedBooks.length}
         sortBy={sortBy}
         onSortChange={setSortBy}
+        viewMode={viewMode}
+        onToggleView={() => setViewMode(viewMode === "list" ? "grid" : "list")}
       />
 
       {/* SearchBar */}
@@ -85,6 +93,8 @@ const BooksScreen: FC = () => {
         <ErrorState message="Failed to load books" onRetry={() => refetch()} />
       ) : (
         <FlashList
+          key={viewMode}
+          numColumns={viewMode === "grid" ? 2 : 1}
           data={sortedBooks}
           keyExtractor={(item) => item.index.toString()}
           estimatedItemSize={140}
@@ -100,8 +110,12 @@ const BooksScreen: FC = () => {
           }
           renderItem={({ item }) => (
             <Link href={`/book/${item.index}`} asChild>
-              <TouchableOpacity activeOpacity={0.7} onPress={hapticPress}>
-                <BookCard book={item} />
+              <TouchableOpacity
+                activeOpacity={0.7}
+                onPress={hapticPress}
+                style={viewMode === "grid" && styles.gridItem}
+              >
+                <BookCard book={item} viewMode={viewMode} />
               </TouchableOpacity>
             </Link>
           )}
@@ -114,10 +128,12 @@ const BooksScreen: FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.BACKGROUND,
   },
   listContent: {
     padding: 16,
+  },
+  gridItem: {
+    marginHorizontal: 6,
   },
 });
 

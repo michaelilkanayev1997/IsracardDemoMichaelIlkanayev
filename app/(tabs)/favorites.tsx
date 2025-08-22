@@ -6,25 +6,28 @@ import { Link } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
 
 import { RootState } from "@/store/store";
-import Header from "@/components/Header";
+import Header, { ViewModeOptions } from "@/components/Header";
 import SearchBar from "@/components/SearchBar";
 import EmptyState from "@/components/EmptyState";
 import BookCard from "@/components/BookCard";
-import colors from "@/constants/colors";
 import { hapticPress } from "@/utils/HapticFeedback";
 import useDebouncedValue from "@/hooks/useDebouncedValue";
 import { toggleFavorite } from "@/slices/booksSlice";
 import { filterBooks, sortBooks } from "@/utils/helper";
 import { SortOption } from "@/components/SortMenu";
+import useTheme from "@/hooks/useTheme";
 
 const FavoritesScreen: FC = () => {
   const dispatch = useDispatch();
+  const { theme } = useTheme();
+
   const { favorites, cachedBooks } = useSelector(
     (state: RootState) => state.books
   );
 
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState<SortOption>("title");
+  const [viewMode, setViewMode] = useState<ViewModeOptions>("list");
   const debounced = useDebouncedValue(searchTerm, 300);
 
   const favoriteBooks = useMemo(() => {
@@ -45,12 +48,17 @@ const FavoritesScreen: FC = () => {
   );
 
   return (
-    <SafeAreaView style={styles.container} edges={["top", "left", "right"]}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: theme.BACKGROUND }]}
+      edges={["top", "left", "right"]}
+    >
       {/* Header */}
       <Header
         count={sortedBooks.length}
         sortBy={sortBy}
         onSortChange={setSortBy}
+        viewMode={viewMode}
+        onToggleView={() => setViewMode(viewMode === "list" ? "grid" : "list")}
       />
 
       {/* Search */}
@@ -63,12 +71,14 @@ const FavoritesScreen: FC = () => {
 
       {/* Content */}
       <FlashList
+        key={viewMode}
+        numColumns={viewMode === "grid" ? 2 : 1}
         data={sortedBooks}
         keyExtractor={(item) => item.index.toString()}
         estimatedItemSize={140}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.listContent}
-        scrollEnabled={sortedBooks.length > 3}
+        //scrollEnabled={sortedBooks.length > 3}
         ListEmptyComponent={
           <EmptyState
             title={favorites.length ? "No matches" : "No favorites yet"}
@@ -82,11 +92,16 @@ const FavoritesScreen: FC = () => {
         }
         renderItem={({ item }) => (
           <Link href={`/book/${item.index}`} asChild>
-            <TouchableOpacity activeOpacity={0.7} onPress={hapticPress}>
+            <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={hapticPress}
+              style={viewMode === "grid" && styles.gridItem}
+            >
               <BookCard
                 book={item}
                 favorite={true}
                 onToggleFavorite={() => dispatch(toggleFavorite(item.index))}
+                viewMode={viewMode}
               />
             </TouchableOpacity>
           </Link>
@@ -99,10 +114,12 @@ const FavoritesScreen: FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.BACKGROUND,
   },
   listContent: {
     padding: 16,
+  },
+  gridItem: {
+    marginHorizontal: 6,
   },
 });
 

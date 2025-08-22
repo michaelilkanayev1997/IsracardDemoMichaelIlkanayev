@@ -7,10 +7,10 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 
-import colors from "@/constants/colors";
 import { hapticPress } from "@/utils/HapticFeedback";
+import CustomButton from "./CustomButton";
+import useTheme from "@/hooks/useTheme";
 
 export type SortOption = "title" | "pages" | "date";
 
@@ -21,6 +21,7 @@ interface SortMenuProps {
 
 const SortMenu: FC<SortMenuProps> = ({ sortBy, onSortChange }) => {
   const [showMenu, setShowMenu] = useState(false);
+  const { theme } = useTheme();
 
   const handleSelect = (option: SortOption) => {
     hapticPress();
@@ -30,13 +31,14 @@ const SortMenu: FC<SortMenuProps> = ({ sortBy, onSortChange }) => {
 
   return (
     <>
-      <TouchableOpacity
-        style={styles.actionButton}
+      {/* Sort Button */}
+      <CustomButton
+        icon="funnel-outline"
+        label={
+          sortBy === "title" ? "Title" : sortBy === "pages" ? "Pages" : "Date"
+        }
         onPress={() => setShowMenu(true)}
-      >
-        <Ionicons name="funnel-outline" size={22} color={colors.TEXT_INVERSE} />
-        <Text style={styles.sortLabel}>Sort</Text>
-      </TouchableOpacity>
+      />
 
       <Modal
         visible={showMenu}
@@ -46,14 +48,18 @@ const SortMenu: FC<SortMenuProps> = ({ sortBy, onSortChange }) => {
         onRequestClose={() => setShowMenu(false)}
       >
         <Pressable style={styles.backdrop} onPress={() => setShowMenu(false)}>
-          <View style={styles.menu}>
-            <Text style={styles.menuTitle}>Sort by</Text>
+          <View style={[styles.menu, { backgroundColor: theme.SURFACE }]}>
+            <Text style={[styles.menuTitle, { color: theme.TEXT_PRIMARY }]}>
+              Sort by
+            </Text>
 
             <View style={styles.options}>
               <TouchableOpacity
                 style={[
                   styles.menuItem,
-                  sortBy === "title" && styles.menuItemActive,
+                  sortBy === "title" && {
+                    backgroundColor: theme.PRIMARY_LIGHT_TRANSPARENT,
+                  },
                 ]}
                 onPress={() => handleSelect("title")}
                 activeOpacity={0.8}
@@ -61,7 +67,11 @@ const SortMenu: FC<SortMenuProps> = ({ sortBy, onSortChange }) => {
                 <Text
                   style={[
                     styles.menuItemText,
-                    sortBy === "title" && styles.menuItemTextActive,
+                    { color: theme.TEXT_PRIMARY },
+                    sortBy === "title" && {
+                      fontWeight: "600",
+                      color: theme.PRIMARY_DARK,
+                    },
                   ]}
                 >
                   Title (A–Z)
@@ -71,7 +81,9 @@ const SortMenu: FC<SortMenuProps> = ({ sortBy, onSortChange }) => {
               <TouchableOpacity
                 style={[
                   styles.menuItem,
-                  sortBy === "pages" && styles.menuItemActive,
+                  sortBy === "pages" && {
+                    backgroundColor: theme.PRIMARY_LIGHT_TRANSPARENT,
+                  },
                 ]}
                 onPress={() => handleSelect("pages")}
                 activeOpacity={0.8}
@@ -79,7 +91,11 @@ const SortMenu: FC<SortMenuProps> = ({ sortBy, onSortChange }) => {
                 <Text
                   style={[
                     styles.menuItemText,
-                    sortBy === "pages" && styles.menuItemTextActive,
+                    { color: theme.TEXT_PRIMARY },
+                    sortBy === "pages" && {
+                      fontWeight: "600",
+                      color: theme.PRIMARY_DARK,
+                    },
                   ]}
                 >
                   Pages
@@ -89,7 +105,9 @@ const SortMenu: FC<SortMenuProps> = ({ sortBy, onSortChange }) => {
               <TouchableOpacity
                 style={[
                   styles.menuItem,
-                  sortBy === "date" && styles.menuItemActive,
+                  sortBy === "date" && {
+                    backgroundColor: theme.PRIMARY_LIGHT_TRANSPARENT,
+                  },
                 ]}
                 onPress={() => handleSelect("date")}
                 activeOpacity={0.8}
@@ -97,7 +115,11 @@ const SortMenu: FC<SortMenuProps> = ({ sortBy, onSortChange }) => {
                 <Text
                   style={[
                     styles.menuItemText,
-                    sortBy === "date" && styles.menuItemTextActive,
+                    { color: theme.TEXT_PRIMARY },
+                    sortBy === "date" && {
+                      fontWeight: "600",
+                      color: theme.PRIMARY_DARK,
+                    },
                   ]}
                 >
                   Release Date
@@ -112,17 +134,6 @@ const SortMenu: FC<SortMenuProps> = ({ sortBy, onSortChange }) => {
 };
 
 const styles = StyleSheet.create({
-  actionButton: {
-    padding: 10,
-    paddingHorizontal: 12,
-    borderRadius: 10,
-    backgroundColor: "rgba(255, 255, 255, 0.2)",
-  },
-  sortLabel: {
-    fontSize: 11,
-    fontWeight: "500",
-    color: colors.TEXT_INVERSE,
-  },
   backdrop: {
     flex: 1,
     backgroundColor: "rgba(0,0,0,0.35)",
@@ -130,7 +141,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   menu: {
-    backgroundColor: colors.SURFACE,
     borderRadius: 14,
     padding: 18,
     width: 240,
@@ -142,7 +152,6 @@ const styles = StyleSheet.create({
   menuTitle: {
     fontSize: 16,
     fontWeight: "600",
-    color: colors.TEXT_PRIMARY,
     marginBottom: 12,
   },
   options: {
@@ -153,16 +162,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 8,
   },
-  menuItemActive: {
-    backgroundColor: colors.PRIMARY_LIGHT_TRANSPARENT,
-  },
   menuItemText: {
     fontSize: 15,
-    color: colors.TEXT_PRIMARY,
-  },
-  menuItemTextActive: {
-    fontWeight: "600",
-    color: colors.PRIMARY_DARK,
   },
 });
 

@@ -3,6 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 import colors from "@/constants/colors";
+import useTheme from "@/hooks/useTheme";
 
 interface ErrorStateProps {
   message?: string;
@@ -13,13 +14,20 @@ const ErrorState: FC<ErrorStateProps> = ({
   message = "Something went wrong",
   onRetry,
 }) => {
+  const { theme } = useTheme();
+
   return (
     <View style={styles.center}>
-      <Ionicons name="alert-circle" size={32} color={colors.ERROR} />
-      <Text style={styles.errorText}>{message}</Text>
+      <Ionicons name="alert-circle" size={32} color={theme.ERROR} />
+      <Text style={[styles.errorText, { color: theme.ERROR }]}>{message}</Text>
       {onRetry && (
-        <TouchableOpacity onPress={onRetry} style={styles.retryBtn}>
-          <Text style={styles.retryText}>Retry</Text>
+        <TouchableOpacity
+          onPress={onRetry}
+          style={[styles.retryBtn, { backgroundColor: theme.PRIMARY_LIGHT }]}
+        >
+          <Text style={[styles.retryText, { color: theme.SURFACE }]}>
+            Retry
+          </Text>
         </TouchableOpacity>
       )}
     </View>
@@ -37,14 +45,12 @@ const styles = StyleSheet.create({
     marginTop: 8,
     fontSize: 16,
     fontWeight: "500",
-    color: colors.ERROR,
   },
   retryBtn: {
     marginTop: 12,
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 8,
-    backgroundColor: colors.PRIMARY_LIGHT,
   },
   retryText: {
     color: colors.SURFACE,

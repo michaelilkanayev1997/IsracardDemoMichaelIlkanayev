@@ -18,10 +18,13 @@ import Loader from "@/components/Loader";
 import ErrorState from "@/components/ErrorState";
 import { hapticPress } from "@/utils/HapticFeedback";
 import { RootState } from "@/store/store";
+import useTheme from "@/hooks/useTheme";
+import BackButton from "@/components/BackButton";
 
 const BookDetails: FC = () => {
   const { id } = useLocalSearchParams();
   const dispatch = useDispatch();
+  const { theme } = useTheme();
 
   const { cachedBooks, favorites, lastFetched } = useSelector(
     (state: RootState) => state.books
@@ -31,7 +34,11 @@ const BookDetails: FC = () => {
   const isFavorite = favorites.includes(Number(id));
 
   return (
-    <SafeAreaView style={styles.screen}>
+    <SafeAreaView
+      style={[styles.screen, { backgroundColor: theme.BACKGROUND }]}
+    >
+      <BackButton title="Book Details" />
+
       {!lastFetched ? (
         <Loader message="Loading book details..." />
       ) : !book ? (
@@ -43,32 +50,47 @@ const BookDetails: FC = () => {
         >
           <Image source={{ uri: book.cover }} style={styles.cover} />
 
-          <Text style={styles.title}>{book.title}</Text>
+          <Text style={[styles.title, { color: theme.TEXT_PRIMARY }]}>
+            {book.title}
+          </Text>
 
           {/* Release date */}
           <View style={styles.infoRow}>
             <Ionicons
               name="calendar-outline"
               size={18}
-              color={colors.TEXT_MUTED}
+              color={theme.TEXT_SECONDARY}
             />
-            <Text style={styles.infoText}>{book.releaseDate}</Text>
+            <Text style={[styles.infoText, { color: theme.TEXT_SECONDARY }]}>
+              {book.releaseDate}
+            </Text>
           </View>
 
           {/* Pages */}
           <View style={styles.infoRow}>
-            <Ionicons name="book-outline" size={18} color={colors.TEXT_MUTED} />
-            <Text style={styles.infoText}>{book.pages} pages</Text>
+            <Ionicons
+              name="book-outline"
+              size={18}
+              color={theme.TEXT_SECONDARY}
+            />
+            <Text style={[styles.infoText, { color: theme.TEXT_SECONDARY }]}>
+              {book.pages} pages
+            </Text>
           </View>
 
           {/* Description */}
-          <Text style={styles.description}>{book.description}</Text>
+          <Text style={[styles.description, { color: theme.TEXT_PRIMARY }]}>
+            {book.description}
+          </Text>
 
           {/* Favorite button */}
           <TouchableOpacity
             style={[
               styles.favoriteButton,
-              isFavorite && { backgroundColor: colors.PRIMARY },
+              {
+                backgroundColor: isFavorite ? theme.PRIMARY : theme.SURFACE,
+                borderColor: theme.PRIMARY,
+              },
             ]}
             onPress={() => {
               hapticPress();
@@ -98,11 +120,10 @@ const BookDetails: FC = () => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: colors.BACKGROUND,
   },
   container: {
     padding: 16,
-    paddingTop: 0,
+    paddingTop: 10,
   },
   cover: {
     width: "100%",
@@ -114,7 +135,6 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: "bold",
     marginBottom: 12,
-    color: colors.TEXT_PRIMARY,
   },
   infoRow: {
     flexDirection: "row",
@@ -124,21 +144,17 @@ const styles = StyleSheet.create({
   infoText: {
     marginLeft: 6,
     fontSize: 14,
-    color: colors.TEXT_MUTED,
   },
   description: {
     fontSize: 15,
     lineHeight: 22,
     marginVertical: 16,
-    color: colors.TEXT_PRIMARY,
   },
   favoriteButton: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: colors.SURFACE,
     borderWidth: 1,
-    borderColor: colors.PRIMARY,
     borderRadius: 8,
     paddingVertical: 12,
     marginTop: 20,
@@ -146,7 +162,6 @@ const styles = StyleSheet.create({
   favoriteText: {
     marginLeft: 8,
     fontSize: 16,
-    color: colors.PRIMARY,
     fontWeight: "600",
   },
 });
