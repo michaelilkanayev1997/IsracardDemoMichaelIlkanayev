@@ -3,6 +3,7 @@ import { FlashList } from "@shopify/flash-list";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Link } from "expo-router";
+import { useDispatch, useSelector } from "react-redux";
 
 import { useGetBooksQuery } from "@/slices/booksApiSlice";
 import Loader from "@/components/Loader";
@@ -14,9 +15,9 @@ import colors from "@/constants/colors";
 import BookCard from "@/components/BookCard";
 import { hapticPress } from "@/utils/HapticFeedback";
 import useDebouncedValue from "@/hooks/useDebouncedValue";
-import { filterBooks } from "@/utils/helper";
+import { SortOption } from "@/components/SortMenu";
+import { filterBooks, sortBooks } from "@/utils/helper";
 import { setCachedBooks } from "@/slices/booksSlice";
-import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 
 const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
@@ -26,6 +27,10 @@ const BooksScreen: FC = () => {
   const { cachedBooks, lastFetched } = useSelector(
     (state: RootState) => state.books
   );
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortBy, setSortBy] = useState<SortOption>("title");
+  const debounced = useDebouncedValue(searchTerm, 300);
 
   const expired = !lastFetched || Date.now() - lastFetched > TWENTY_FOUR_HOURS;
 
@@ -44,20 +49,26 @@ const BooksScreen: FC = () => {
   // prefer cache if exists, else fallback to query data
   const booksToShow = cachedBooks.length ? cachedBooks : data ?? [];
 
-  const [searchTerm, setSearchTerm] = useState("");
-
-  const debounced = useDebouncedValue(searchTerm, 300);
-
   // Filtering Books
   const filteredBooks = useMemo(
-    () => filterBooks(booksToShow ?? [], debounced),
+    () => filterBooks(booksToShow, debounced, "title"),
     [data, debounced]
+  );
+
+  // Sorting Books
+  const sortedBooks = useMemo(
+    () => sortBooks(filteredBooks, sortBy),
+    [filteredBooks, sortBy]
   );
 
   return (
     <SafeAreaView style={styles.container} edges={["top", "left", "right"]}>
       {/* Header */}
-      <Header count={filteredBooks.length} />
+      <Header
+        count={sortedBooks.length}
+        sortBy={sortBy}
+        onSortChange={setSortBy}
+      />
 
       {/* SearchBar */}
       <SearchBar
@@ -74,10 +85,11 @@ const BooksScreen: FC = () => {
         <ErrorState message="Failed to load books" onRetry={() => refetch()} />
       ) : (
         <FlashList
-          data={filteredBooks}
+          data={sortedBooks}
           keyExtractor={(item) => item.index.toString()}
           estimatedItemSize={140}
           showsVerticalScrollIndicator={false}
+          scrollEnabled={sortedBooks.length > 3}
           contentContainerStyle={styles.listContent}
           ListEmptyComponent={
             <EmptyState
