@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { FlashList } from "@shopify/flash-list";
 import { Link } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 import { RootState } from "@/store/store";
 import Header, { ViewModeOptions } from "@/components/Header";
@@ -20,6 +21,7 @@ import useTheme from "@/hooks/useTheme";
 const FavoritesScreen: FC = () => {
   const dispatch = useDispatch();
   const { theme } = useTheme();
+  const { t } = useTranslation();
 
   const { favorites, cachedBooks } = useSelector(
     (state: RootState) => state.books
@@ -66,7 +68,7 @@ const FavoritesScreen: FC = () => {
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
         onClear={() => setSearchTerm("")}
-        placeholder="Search favorites..."
+        placeholder={t("favorites.searchPlaceholder")}
       />
 
       {/* Content */}
@@ -81,11 +83,15 @@ const FavoritesScreen: FC = () => {
         //scrollEnabled={sortedBooks.length > 3}
         ListEmptyComponent={
           <EmptyState
-            title={favorites.length ? "No matches" : "No favorites yet"}
+            title={
+              favorites.length
+                ? t("favorites.emptyNoMatchesTitle")
+                : t("favorites.emptyNoFavoritesTitle")
+            }
             subtitle={
               favorites.length
-                ? "Try a different search."
-                : "Mark books as favorites to see them here."
+                ? t("favorites.emptyNoMatchesSubtitle")
+                : t("favorites.emptyNoFavoritesSubtitle")
             }
             icon="heart-outline"
           />

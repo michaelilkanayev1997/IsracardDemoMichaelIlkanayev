@@ -20,11 +20,13 @@ import { hapticPress } from "@/utils/HapticFeedback";
 import { RootState } from "@/store/store";
 import useTheme from "@/hooks/useTheme";
 import BackButton from "@/components/BackButton";
+import { useTranslation } from "react-i18next";
 
 const BookDetails: FC = () => {
   const { id } = useLocalSearchParams();
   const dispatch = useDispatch();
   const { theme } = useTheme();
+  const { t } = useTranslation();
 
   const { cachedBooks, favorites, lastFetched } = useSelector(
     (state: RootState) => state.books
@@ -37,12 +39,12 @@ const BookDetails: FC = () => {
     <SafeAreaView
       style={[styles.screen, { backgroundColor: theme.BACKGROUND }]}
     >
-      <BackButton title="Book Details" />
+      <BackButton title={t("bookDetails.title")} />
 
       {!lastFetched ? (
-        <Loader message="Loading book details..." />
+        <Loader message={t("bookDetails.loading")} />
       ) : !book ? (
-        <ErrorState message="Book not found in cache" />
+        <ErrorState message={t("bookDetails.notFound")} />
       ) : (
         <ScrollView
           contentContainerStyle={styles.container}
@@ -74,7 +76,7 @@ const BookDetails: FC = () => {
               color={theme.TEXT_SECONDARY}
             />
             <Text style={[styles.infoText, { color: theme.TEXT_SECONDARY }]}>
-              {book.pages} pages
+              {t("bookDetails.pages", { count: book.pages })}
             </Text>
           </View>
 
@@ -108,7 +110,9 @@ const BookDetails: FC = () => {
                 isFavorite && { color: colors.TEXT_INVERSE },
               ]}
             >
-              {isFavorite ? "Favorited" : "Add to Favorites"}
+              {isFavorite
+                ? t("bookDetails.favorited")
+                : t("bookDetails.addToFavorites")}
             </Text>
           </TouchableOpacity>
         </ScrollView>

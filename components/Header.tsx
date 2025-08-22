@@ -8,6 +8,7 @@ import { router } from "expo-router";
 import SortMenu, { SortOption } from "./SortMenu";
 import CustomButton from "./CustomButton";
 import useTheme from "@/hooks/useTheme";
+import { useTranslation } from "react-i18next";
 
 export type ViewModeOptions = "list" | "grid";
 
@@ -27,6 +28,7 @@ const Header: FC<HeaderProps> = ({
   onToggleView,
 }) => {
   const { theme } = useTheme();
+  const { t } = useTranslation();
 
   return (
     <LinearGradient
@@ -42,11 +44,11 @@ const Header: FC<HeaderProps> = ({
               color={theme.TEXT_INVERSE}
             />
             <Text style={[styles.title, { color: theme.TEXT_INVERSE }]}>
-              Books
+              {t("header.title")}
             </Text>
           </View>
           <Text style={[styles.subtitle, { color: theme.TEXT_INVERSE_MUTED }]}>
-            {count} book{count !== 1 ? "s" : ""}
+            {t("header.count", { count })}
           </Text>
         </View>
 
@@ -56,14 +58,14 @@ const Header: FC<HeaderProps> = ({
           {/* View Toggle Button */}
           <CustomButton
             icon={viewMode === "list" ? "grid-outline" : "list-outline"}
-            label={viewMode === "list" ? "Grid" : "List"}
+            label={viewMode === "list" ? t("header.grid") : t("header.list")}
             onPress={onToggleView}
           />
 
           {/* Settings Button */}
           <CustomButton
             icon="settings-outline"
-            label="Settings"
+            label={t("header.settings")}
             onPress={() => router.push("/settings")}
           />
         </View>

@@ -16,7 +16,7 @@ const CustomButton: FC<CustomButtonProps> = ({ icon, label, onPress }) => {
 
   return (
     <TouchableOpacity
-      style={[styles.actionButton, { backgroundColor: theme.SURFACE + "20" }]}
+      style={[styles.actionButton, { backgroundColor: theme.SURFACE + "25" }]}
       onPress={() => {
         hapticPress();
         onPress();
@@ -31,8 +31,8 @@ const CustomButton: FC<CustomButtonProps> = ({ icon, label, onPress }) => {
 
 const styles = StyleSheet.create({
   actionButton: {
-    width: 55,
-    height: 55,
+    width: 57,
+    height: 57,
     borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
