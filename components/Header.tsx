@@ -5,12 +5,17 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 
 import colors from "@/constants/colors";
+import SortMenu from "./SortMenu";
+
+type SortOption = "title" | "pages" | "date";
 
 interface HeaderProps {
   count: number;
+  sortBy: SortOption;
+  onSortChange: (option: SortOption) => void;
 }
 
-const Header: FC<HeaderProps> = ({ count }) => {
+const Header: FC<HeaderProps> = ({ count, sortBy, onSortChange }) => {
   return (
     <LinearGradient
       colors={[colors.PRIMARY_DARK, colors.PRIMARY_LIGHT]}
@@ -29,6 +34,10 @@ const Header: FC<HeaderProps> = ({ count }) => {
           <Text style={styles.subtitle}>
             {count} book{count !== 1 ? "s" : ""}
           </Text>
+        </View>
+
+        <View style={styles.headerActions}>
+          <SortMenu sortBy={sortBy} onSortChange={onSortChange} />
         </View>
       </SafeAreaView>
     </LinearGradient>
@@ -65,6 +74,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.TEXT_INVERSE_MUTED,
     marginLeft: 38,
+  },
+  headerActions: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
   },
 });
 

@@ -14,6 +14,8 @@ import colors from "@/constants/colors";
 import { hapticPress } from "@/utils/HapticFeedback";
 import useDebouncedValue from "@/hooks/useDebouncedValue";
 import { toggleFavorite } from "@/slices/booksSlice";
+import { filterBooks, sortBooks } from "@/utils/helper";
+import { SortOption } from "@/components/SortMenu";
 
 const FavoritesScreen: FC = () => {
   const dispatch = useDispatch();
@@ -22,7 +24,7 @@ const FavoritesScreen: FC = () => {
   );
 
   const [searchTerm, setSearchTerm] = useState("");
-
+  const [sortBy, setSortBy] = useState<SortOption>("title");
   const debounced = useDebouncedValue(searchTerm, 300);
 
   const favoriteBooks = useMemo(() => {
@@ -30,21 +32,26 @@ const FavoritesScreen: FC = () => {
     return cachedBooks.filter((book) => favorites.includes(book.index));
   }, [cachedBooks, favorites]);
 
-  const filteredBooks = useMemo(() => {
-    const query = debounced.toLowerCase().trim();
-    if (!query) return favoriteBooks;
+  // Filtering Books
+  const filteredBooks = useMemo(
+    () => filterBooks(favoriteBooks, debounced, "title+description"),
+    [favoriteBooks, debounced]
+  );
 
-    return favoriteBooks.filter(
-      (book) =>
-        book.title.toLowerCase().includes(query) ||
-        book.description.toLowerCase().includes(query)
-    );
-  }, [favoriteBooks, debounced]);
+  // Sorting Books
+  const sortedBooks = useMemo(
+    () => sortBooks(filteredBooks, sortBy),
+    [filteredBooks, sortBy]
+  );
 
   return (
     <SafeAreaView style={styles.container} edges={["top", "left", "right"]}>
       {/* Header */}
-      <Header count={filteredBooks.length} />
+      <Header
+        count={sortedBooks.length}
+        sortBy={sortBy}
+        onSortChange={setSortBy}
+      />
 
       {/* Search */}
       <SearchBar
@@ -56,11 +63,12 @@ const FavoritesScreen: FC = () => {
 
       {/* Content */}
       <FlashList
-        data={filteredBooks}
+        data={sortedBooks}
         keyExtractor={(item) => item.index.toString()}
         estimatedItemSize={140}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.listContent}
+        scrollEnabled={sortedBooks.length > 3}
         ListEmptyComponent={
           <EmptyState
             title={favorites.length ? "No matches" : "No favorites yet"}
