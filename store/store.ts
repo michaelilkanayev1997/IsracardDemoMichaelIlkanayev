@@ -1,8 +1,5 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
-import { apiSlice } from "@/slices/apiSlice";
-import booksReducer from "@/slices/booksSlice";
 import {
   persistReducer,
   persistStore,
@@ -14,15 +11,20 @@ import {
   REGISTER,
 } from "redux-persist";
 
+import { apiSlice } from "@/slices/apiSlice";
+import booksReducer from "@/slices/booksSlice";
+import themeReducer from "@/slices/themeSlice";
+
 const rootReducer = combineReducers({
   [apiSlice.reducerPath]: apiSlice.reducer, // RTK Query
   books: booksReducer,
+  theme: themeReducer,
 });
 
 const persistConfig = {
   key: "root",
   storage: AsyncStorage,
-  whitelist: ["books"],
+  whitelist: ["books", "theme"],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
