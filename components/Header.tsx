@@ -1,11 +1,12 @@
 import { FC } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 
 import colors from "@/constants/colors";
 import SortMenu, { SortOption } from "./SortMenu";
+import CustomButton from "./CustomButton";
 
 export type ViewModeOptions = "list" | "grid";
 
@@ -47,20 +48,12 @@ const Header: FC<HeaderProps> = ({
         <View style={styles.headerActions}>
           <SortMenu sortBy={sortBy} onSortChange={onSortChange} />
 
-          <TouchableOpacity
-            style={styles.actionButton}
+          {/* View Toggle Button */}
+          <CustomButton
+            icon={viewMode === "list" ? "grid-outline" : "list-outline"}
+            label={viewMode === "list" ? "Grid" : "List"}
             onPress={onToggleView}
-            activeOpacity={0.7}
-          >
-            <Ionicons
-              name={viewMode === "list" ? "grid-outline" : "list-outline"}
-              size={22}
-              color={colors.TEXT_INVERSE}
-            />
-            <Text style={styles.viewModeLabel}>
-              {viewMode === "list" ? "Grid" : "List"}
-            </Text>
-          </TouchableOpacity>
+          />
         </View>
       </SafeAreaView>
     </LinearGradient>
@@ -101,18 +94,7 @@ const styles = StyleSheet.create({
   headerActions: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 12,
-  },
-  actionButton: {
-    padding: 10,
-    paddingHorizontal: 12,
-    borderRadius: 10,
-    backgroundColor: "rgba(255, 255, 255, 0.2)",
-  },
-  viewModeLabel: {
-    fontSize: 11,
-    fontWeight: "500",
-    color: colors.TEXT_INVERSE,
+    gap: 10,
   },
 });
 

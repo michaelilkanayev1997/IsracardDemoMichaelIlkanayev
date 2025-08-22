@@ -7,10 +7,10 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 
 import colors from "@/constants/colors";
 import { hapticPress } from "@/utils/HapticFeedback";
+import CustomButton from "./CustomButton";
 
 export type SortOption = "title" | "pages" | "date";
 
@@ -30,13 +30,14 @@ const SortMenu: FC<SortMenuProps> = ({ sortBy, onSortChange }) => {
 
   return (
     <>
-      <TouchableOpacity
-        style={styles.actionButton}
+      {/* Sort Button */}
+      <CustomButton
+        icon="funnel-outline"
+        label={
+          sortBy === "title" ? "Title" : sortBy === "pages" ? "Pages" : "Date"
+        }
         onPress={() => setShowMenu(true)}
-      >
-        <Ionicons name="funnel-outline" size={22} color={colors.TEXT_INVERSE} />
-        <Text style={styles.sortLabel}>Sort</Text>
-      </TouchableOpacity>
+      />
 
       <Modal
         visible={showMenu}
@@ -112,17 +113,6 @@ const SortMenu: FC<SortMenuProps> = ({ sortBy, onSortChange }) => {
 };
 
 const styles = StyleSheet.create({
-  actionButton: {
-    padding: 10,
-    paddingHorizontal: 12,
-    borderRadius: 10,
-    backgroundColor: "rgba(255, 255, 255, 0.2)",
-  },
-  sortLabel: {
-    fontSize: 11,
-    fontWeight: "500",
-    color: colors.TEXT_INVERSE,
-  },
   backdrop: {
     flex: 1,
     backgroundColor: "rgba(0,0,0,0.35)",
