@@ -2,7 +2,7 @@ import { FC } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-import colors from "@/constants/colors";
+import useTheme from "@/hooks/useTheme";
 
 interface EmptyStateProps {
   title?: string;
@@ -15,11 +15,15 @@ const EmptyState: FC<EmptyStateProps> = ({
   subtitle = "Try adjusting your search or add new items",
   icon = "search-outline",
 }) => {
+  const { theme } = useTheme();
+
   return (
     <View style={styles.container}>
-      <Ionicons name={icon} size={48} color={colors.TEXT_MUTED} />
-      <Text style={styles.title}>{title}</Text>
-      <Text style={styles.subtitle}>{subtitle}</Text>
+      <Ionicons name={icon} size={48} color={theme.TEXT_SECONDARY} />
+      <Text style={[styles.title, { color: theme.TEXT_PRIMARY }]}>{title}</Text>
+      <Text style={[styles.subtitle, { color: theme.TEXT_SECONDARY }]}>
+        {subtitle}
+      </Text>
     </View>
   );
 };
@@ -34,12 +38,10 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: "600",
-    color: colors.TEXT_PRIMARY,
     marginTop: 12,
   },
   subtitle: {
     fontSize: 14,
-    color: colors.TEXT_SECONDARY,
     marginTop: 4,
     textAlign: "center",
     paddingHorizontal: 32,

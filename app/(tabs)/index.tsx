@@ -11,7 +11,6 @@ import ErrorState from "@/components/ErrorState";
 import EmptyState from "@/components/EmptyState";
 import SearchBar from "@/components/SearchBar";
 import Header, { ViewModeOptions } from "@/components/Header";
-import colors from "@/constants/colors";
 import BookCard from "@/components/BookCard";
 import { hapticPress } from "@/utils/HapticFeedback";
 import useDebouncedValue from "@/hooks/useDebouncedValue";
@@ -19,11 +18,14 @@ import { SortOption } from "@/components/SortMenu";
 import { filterBooks, sortBooks } from "@/utils/helper";
 import { setCachedBooks } from "@/slices/booksSlice";
 import { RootState } from "@/store/store";
+import useTheme from "@/hooks/useTheme";
 
 const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
 
 const BooksScreen: FC = () => {
   const dispatch = useDispatch();
+  const { theme } = useTheme();
+
   const { cachedBooks, lastFetched } = useSelector(
     (state: RootState) => state.books
   );
@@ -63,7 +65,10 @@ const BooksScreen: FC = () => {
   );
 
   return (
-    <SafeAreaView style={styles.container} edges={["top", "left", "right"]}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: theme.BACKGROUND }]}
+      edges={["top", "left", "right"]}
+    >
       {/* Header */}
       <Header
         count={sortedBooks.length}
@@ -123,7 +128,6 @@ const BooksScreen: FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.BACKGROUND,
   },
   listContent: {
     padding: 16,

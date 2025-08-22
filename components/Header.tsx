@@ -3,10 +3,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { StyleSheet, Text, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 
-import colors from "@/constants/colors";
 import SortMenu, { SortOption } from "./SortMenu";
 import CustomButton from "./CustomButton";
+import useTheme from "@/hooks/useTheme";
 
 export type ViewModeOptions = "list" | "grid";
 
@@ -25,9 +26,11 @@ const Header: FC<HeaderProps> = ({
   viewMode,
   onToggleView,
 }) => {
+  const { theme } = useTheme();
+
   return (
     <LinearGradient
-      colors={[colors.PRIMARY_DARK, colors.PRIMARY_LIGHT]}
+      colors={[theme.PRIMARY_DARK, theme.PRIMARY_LIGHT]}
       style={styles.headerGradient}
     >
       <SafeAreaView edges={["top", "left", "right"]} style={styles.header}>
@@ -36,11 +39,13 @@ const Header: FC<HeaderProps> = ({
             <Ionicons
               name="book-outline"
               size={28}
-              color={colors.TEXT_INVERSE}
+              color={theme.TEXT_INVERSE}
             />
-            <Text style={styles.title}>Books</Text>
+            <Text style={[styles.title, { color: theme.TEXT_INVERSE }]}>
+              Books
+            </Text>
           </View>
-          <Text style={styles.subtitle}>
+          <Text style={[styles.subtitle, { color: theme.TEXT_INVERSE_MUTED }]}>
             {count} book{count !== 1 ? "s" : ""}
           </Text>
         </View>
@@ -53,6 +58,13 @@ const Header: FC<HeaderProps> = ({
             icon={viewMode === "list" ? "grid-outline" : "list-outline"}
             label={viewMode === "list" ? "Grid" : "List"}
             onPress={onToggleView}
+          />
+
+          {/* Settings Button */}
+          <CustomButton
+            icon="settings-outline"
+            label="Settings"
+            onPress={() => router.push("/settings")}
           />
         </View>
       </SafeAreaView>
@@ -83,12 +95,10 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    color: colors.TEXT_INVERSE,
     marginLeft: 10,
   },
   subtitle: {
     fontSize: 14,
-    color: colors.TEXT_INVERSE_MUTED,
     marginLeft: 38,
   },
   headerActions: {

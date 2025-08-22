@@ -26,6 +26,19 @@ const RootLayout = () => {
               ),
             }}
           />
+          <Stack.Screen
+            name="settings"
+            options={{
+              headerShown: true,
+              animation: "slide_from_right",
+              title: "Settings",
+              headerLeft: () => (
+                <TouchableOpacity onPress={() => router.back()}>
+                  <Ionicons name="arrow-back" size={24} color="black" />
+                </TouchableOpacity>
+              ),
+            }}
+          />
         </Stack>
       </PersistGate>
     </Provider>

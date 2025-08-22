@@ -10,10 +10,10 @@ import {
 import Animated, { FadeInDown, FadeOutUp } from "react-native-reanimated";
 import { Ionicons } from "@expo/vector-icons";
 
-import colors from "@/constants/colors";
 import { Book } from "@/types/Book";
 import { hapticPress } from "@/utils/HapticFeedback";
 import { ViewModeOptions } from "./Header";
+import useTheme from "@/hooks/useTheme";
 
 interface BookCardProps {
   book: Book;
@@ -24,12 +24,17 @@ interface BookCardProps {
 
 const BookCard: FC<BookCardProps> = memo(
   ({ book, favorite, onToggleFavorite, viewMode = "list" }) => {
+    const { theme } = useTheme();
     const isGrid = viewMode === "grid";
     return (
       <Animated.View
         entering={FadeInDown.springify().damping(15)}
         exiting={FadeOutUp.duration(250)}
-        style={[styles.card, isGrid && styles.cardGrid]}
+        style={[
+          styles.card,
+          { backgroundColor: theme.SURFACE, shadowColor: theme.TEXT_PRIMARY },
+          isGrid && styles.cardGrid,
+        ]}
       >
         <Image
           source={{ uri: book.cover }}
@@ -38,7 +43,11 @@ const BookCard: FC<BookCardProps> = memo(
 
         <View style={[styles.info, isGrid && styles.infoGrid]}>
           <Text
-            style={[styles.title, isGrid && styles.titleGrid]}
+            style={[
+              styles.title,
+              { color: theme.TEXT_PRIMARY },
+              isGrid && styles.titleGrid,
+            ]}
             numberOfLines={2}
           >
             {book.title}
@@ -47,9 +56,15 @@ const BookCard: FC<BookCardProps> = memo(
             <Ionicons
               name="calendar-outline"
               size={16}
-              color={colors.TEXT_SECONDARY}
+              color={theme.TEXT_SECONDARY}
             />
-            <Text style={[styles.release, isGrid && styles.releaseGrid]}>
+            <Text
+              style={[
+                styles.release,
+                { color: theme.TEXT_SECONDARY },
+                isGrid && styles.releaseGrid,
+              ]}
+            >
               {book.releaseDate}
             </Text>
           </View>
@@ -61,15 +76,19 @@ const BookCard: FC<BookCardProps> = memo(
               hapticPress();
               onToggleFavorite(book);
             }}
-            android_ripple={{ color: colors.BORDER, borderless: true }}
+            android_ripple={{ color: theme.BORDER, borderless: true }}
             hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
             style={({ pressed }) => [
               styles.iconBtn,
+              {
+                backgroundColor: theme.BACKGROUND,
+                borderColor: theme.BORDER,
+              },
               pressed && styles.iconBtnPressed,
               isGrid && styles.iconBtnGrid,
             ]}
           >
-            <Ionicons name="heart" size={18} color={colors.PRIMARY} />
+            <Ionicons name="heart" size={18} color={theme.PRIMARY} />
           </Pressable>
         )}
       </Animated.View>
@@ -80,12 +99,10 @@ const BookCard: FC<BookCardProps> = memo(
 const styles = StyleSheet.create({
   card: {
     flexDirection: "row",
-    backgroundColor: colors.SURFACE,
     borderRadius: 12,
     padding: 12,
     marginBottom: 14,
     alignItems: "center",
-    shadowColor: "#000",
     shadowOpacity: 0.08,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 6,
@@ -109,7 +126,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: Platform.OS === "ios" ? "600" : "bold",
-    color: colors.TEXT_PRIMARY,
     marginBottom: 6,
   },
   dateRow: {
@@ -119,7 +135,6 @@ const styles = StyleSheet.create({
   },
   release: {
     fontSize: 14,
-    color: colors.TEXT_SECONDARY,
     marginLeft: 6,
   },
   releaseGrid: {
@@ -128,9 +143,7 @@ const styles = StyleSheet.create({
   iconBtn: {
     padding: 8,
     borderRadius: 10,
-    backgroundColor: colors.BACKGROUND,
     borderWidth: 1,
-    borderColor: colors.BORDER,
     position: "absolute",
     right: 10,
     bottom: 10,

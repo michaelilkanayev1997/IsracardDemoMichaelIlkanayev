@@ -10,15 +10,17 @@ import Header, { ViewModeOptions } from "@/components/Header";
 import SearchBar from "@/components/SearchBar";
 import EmptyState from "@/components/EmptyState";
 import BookCard from "@/components/BookCard";
-import colors from "@/constants/colors";
 import { hapticPress } from "@/utils/HapticFeedback";
 import useDebouncedValue from "@/hooks/useDebouncedValue";
 import { toggleFavorite } from "@/slices/booksSlice";
 import { filterBooks, sortBooks } from "@/utils/helper";
 import { SortOption } from "@/components/SortMenu";
+import useTheme from "@/hooks/useTheme";
 
 const FavoritesScreen: FC = () => {
   const dispatch = useDispatch();
+  const { theme } = useTheme();
+
   const { favorites, cachedBooks } = useSelector(
     (state: RootState) => state.books
   );
@@ -46,7 +48,10 @@ const FavoritesScreen: FC = () => {
   );
 
   return (
-    <SafeAreaView style={styles.container} edges={["top", "left", "right"]}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: theme.BACKGROUND }]}
+      edges={["top", "left", "right"]}
+    >
       {/* Header */}
       <Header
         count={sortedBooks.length}
@@ -109,7 +114,6 @@ const FavoritesScreen: FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.BACKGROUND,
   },
   listContent: {
     padding: 16,
