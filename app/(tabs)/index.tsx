@@ -19,12 +19,14 @@ import { filterBooks, sortBooks } from "@/utils/helper";
 import { setCachedBooks } from "@/slices/booksSlice";
 import { RootState } from "@/store/store";
 import useTheme from "@/hooks/useTheme";
+import { useTranslation } from "react-i18next";
 
 const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
 
 const BooksScreen: FC = () => {
   const dispatch = useDispatch();
   const { theme } = useTheme();
+  const { t } = useTranslation();
 
   const { cachedBooks, lastFetched } = useSelector(
     (state: RootState) => state.books
@@ -83,14 +85,14 @@ const BooksScreen: FC = () => {
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
         onClear={() => setSearchTerm("")}
-        placeholder="Search books..."
+        placeholder={t("books.searchPlaceholder")}
       />
 
       {/* Main content */}
       {isLoading ? (
-        <Loader message="Loading books..." />
+        <Loader message={t("books.loading")} />
       ) : isError ? (
-        <ErrorState message="Failed to load books" onRetry={() => refetch()} />
+        <ErrorState message={t("books.error")} onRetry={() => refetch()} />
       ) : (
         <FlashList
           key={viewMode}
@@ -103,8 +105,8 @@ const BooksScreen: FC = () => {
           contentContainerStyle={styles.listContent}
           ListEmptyComponent={
             <EmptyState
-              title="No books found"
-              subtitle="Try a different search or check back later"
+              title={t("books.emptyTitle")}
+              subtitle={t("books.emptySubtitle")}
               icon="book-outline"
             />
           }

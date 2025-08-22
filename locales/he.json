@@ -2,6 +2,48 @@
     "settings": {
         "title": "הגדרות",
         "darkMode": "מצב כהה",
-        "language": "שפה"
+        "language": "שפה",
+        "chooseLanguage": "בחר שפה"
+    },
+    "bookDetails": {
+        "title": "פרטי ספר",
+        "loading": "טוען פרטי ספר...",
+        "notFound": "הספר לא נמצא במטמון",
+        "pages": "{{count}} עמודים",
+        "favorited": "נוסף למועדפים",
+        "addToFavorites": "הוסף למועדפים"
+    },
+    "favorites": {
+        "searchPlaceholder": "חיפוש מועדפים...",
+        "emptyNoMatchesTitle": "אין תוצאות",
+        "emptyNoMatchesSubtitle": "נסה חיפוש אחר.",
+        "emptyNoFavoritesTitle": "אין מועדפים עדיין",
+        "emptyNoFavoritesSubtitle": "סמן ספרים כמועדפים כדי לראות אותם כאן."
+    },
+    "books": {
+        "searchPlaceholder": "חפש ספרים...",
+        "loading": "טוען ספרים...",
+        "error": "נכשל בטעינת ספרים",
+        "emptyTitle": "לא נמצאו ספרים",
+        "emptySubtitle": "נסה חיפוש אחר או חזור מאוחר יותר"
+    },
+    "header": {
+        "title": "ספרים",
+        "count_one": "{{count}} ספר",
+        "count_other": "{{count}} ספרים",
+        "grid": "רשת",
+        "list": "רשימה",
+        "settings": "הגדרות"
+    },
+    "sort": {
+        "title": "כותרת (א–ת)",
+        "pages": "עמודים",
+        "date": "תאריך יציאה",
+        "label": {
+            "title": "כותרת",
+            "pages": "עמודים",
+            "date": "תאריך"
+        },
+        "modalTitle": "מיין לפי"
     }
 }

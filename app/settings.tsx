@@ -8,7 +8,7 @@ import useTheme from "@/hooks/useTheme";
 import { toggleTheme } from "@/slices/themeSlice";
 import BackButton from "@/components/BackButton";
 import { RootState } from "@/store/store";
-import { setLanguage } from "@/slices/languageSlice";
+import { Language, setLanguage } from "@/slices/languageSlice";
 import OptionModal, { Option } from "@/components/OptionModal";
 
 const languageOptions: Option[] = [
@@ -20,8 +20,8 @@ const languageOptions: Option[] = [
 const SettingsScreen: FC = () => {
   const dispatch = useDispatch();
   const { theme, isDark } = useTheme();
-
   const { t } = useTranslation();
+
   const currentLang = useSelector((state: RootState) => state.language.current);
   const [showLangModal, setShowLangModal] = useState(false);
 
@@ -29,7 +29,7 @@ const SettingsScreen: FC = () => {
     <SafeAreaView
       style={[styles.container, { backgroundColor: theme.BACKGROUND }]}
     >
-      <BackButton title="Book Details" />
+      <BackButton title={t("settings.title")} />
 
       {/* Dark mode toggle */}
       <View style={[styles.settingRow, { borderBottomColor: theme.BORDER }]}>
@@ -70,10 +70,10 @@ const SettingsScreen: FC = () => {
 
         <OptionModal
           visible={showLangModal}
-          title="Choose Language"
+          title={t("settings.chooseLanguage")}
           options={languageOptions}
           selected={currentLang}
-          onSelect={(lang) => dispatch(setLanguage(lang as any))}
+          onSelect={(lang) => dispatch(setLanguage(lang as Language))}
           onClose={() => setShowLangModal(false)}
         />
       </View>

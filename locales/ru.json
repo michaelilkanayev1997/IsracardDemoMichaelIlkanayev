@@ -2,6 +2,48 @@
     "settings": {
         "title": "Настройки",
         "darkMode": "Темный режим",
-        "language": "Язык"
+        "language": "Язык",
+        "chooseLanguage": "Выберите язык"
+    },
+    "bookDetails": {
+        "title": "Детали книги",
+        "loading": "Загрузка деталей книги...",
+        "notFound": "Книга не найдена в кеше",
+        "pages": "{{count}} страниц",
+        "favorited": "В избранном",
+        "addToFavorites": "Добавить в избранное"
+    },
+    "favorites": {
+        "searchPlaceholder": "Поиск избранного...",
+        "emptyNoMatchesTitle": "Нет совпадений",
+        "emptyNoMatchesSubtitle": "Попробуйте другой поиск.",
+        "emptyNoFavoritesTitle": "Ещё нет избранного",
+        "emptyNoFavoritesSubtitle": "Добавьте книги в избранное, чтобы увидеть их здесь."
+    },
+    "books": {
+        "searchPlaceholder": "Поиск книг...",
+        "loading": "Загрузка книг...",
+        "error": "Не удалось загрузить книги",
+        "emptyTitle": "Книги не найдены",
+        "emptySubtitle": "Попробуйте другой запрос или зайдите позже"
+    },
+    "header": {
+        "title": "Книги",
+        "count_one": "{{count}} ספר",
+        "count_other": "{{count}} ספרים",
+        "grid": "Сетка",
+        "list": "Список",
+        "settings": "Настройки"
+    },
+    "sort": {
+        "title": "Название (А–Я)",
+        "pages": "Страницы",
+        "date": "Дата выхода",
+        "label": {
+            "title": "Название",
+            "pages": "Страницы",
+            "date": "Дата"
+        },
+        "modalTitle": "Сортировать по"
     }
 }

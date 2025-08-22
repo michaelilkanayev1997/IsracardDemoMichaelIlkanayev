@@ -2,6 +2,48 @@
     "settings": {
         "title": "Settings",
         "darkMode": "Dark Mode",
-        "language": "Language"
+        "language": "Language",
+        "chooseLanguage": "Choose Language"
+    },
+    "bookDetails": {
+        "title": "Book Details",
+        "loading": "Loading book details...",
+        "notFound": "Book not found in cache",
+        "pages": "{{count}} pages",
+        "favorited": "Favorited",
+        "addToFavorites": "Add to Favorites"
+    },
+    "favorites": {
+        "searchPlaceholder": "Search favorites...",
+        "emptyNoMatchesTitle": "No matches",
+        "emptyNoMatchesSubtitle": "Try a different search.",
+        "emptyNoFavoritesTitle": "No favorites yet",
+        "emptyNoFavoritesSubtitle": "Mark books as favorites to see them here."
+    },
+    "books": {
+        "searchPlaceholder": "Search books...",
+        "loading": "Loading books...",
+        "error": "Failed to load books",
+        "emptyTitle": "No books found",
+        "emptySubtitle": "Try a different search or check back later"
+    },
+    "header": {
+        "title": "Books",
+        "count_one": "{{count}} book",
+        "count_other": "{{count}} books",
+        "grid": "Grid",
+        "list": "List",
+        "settings": "Settings"
+    },
+    "sort": {
+        "title": "Title (A–Z)",
+        "pages": "Pages",
+        "date": "Release Date",
+        "label": {
+            "title": "Title",
+            "pages": "Pages",
+            "date": "Date"
+        },
+        "modalTitle": "Sort by"
     }
 }
