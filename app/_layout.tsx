@@ -6,9 +6,12 @@ import { StatusBar } from "expo-status-bar";
 import store, { persistor } from "@/store/store";
 import Loader from "@/components/Loader";
 import useTheme from "@/hooks/useTheme";
+import useLanguageSync from "@/hooks/useLanguageSync";
 
 const AppNavigator = () => {
   const { isDark } = useTheme();
+  useLanguageSync();
+
   return (
     <>
       <StatusBar style={isDark ? "light" : "dark"} animated />

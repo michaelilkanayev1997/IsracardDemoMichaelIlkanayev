@@ -14,17 +14,19 @@ import {
 import { apiSlice } from "@/slices/apiSlice";
 import booksReducer from "@/slices/booksSlice";
 import themeReducer from "@/slices/themeSlice";
+import languageReducer from "@/slices/languageSlice";
 
 const rootReducer = combineReducers({
   [apiSlice.reducerPath]: apiSlice.reducer, // RTK Query
   books: booksReducer,
   theme: themeReducer,
+  language: languageReducer,
 });
 
 const persistConfig = {
   key: "root",
   storage: AsyncStorage,
-  whitelist: ["books", "theme"],
+  whitelist: ["books", "theme", "language"],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
