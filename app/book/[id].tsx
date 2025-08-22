@@ -19,6 +19,7 @@ import ErrorState from "@/components/ErrorState";
 import { hapticPress } from "@/utils/HapticFeedback";
 import { RootState } from "@/store/store";
 import useTheme from "@/hooks/useTheme";
+import BackButton from "@/components/BackButton";
 
 const BookDetails: FC = () => {
   const { id } = useLocalSearchParams();
@@ -36,6 +37,8 @@ const BookDetails: FC = () => {
     <SafeAreaView
       style={[styles.screen, { backgroundColor: theme.BACKGROUND }]}
     >
+      <BackButton title="Book Details" />
+
       {!lastFetched ? (
         <Loader message="Loading book details..." />
       ) : !book ? (
@@ -120,7 +123,7 @@ const styles = StyleSheet.create({
   },
   container: {
     padding: 16,
-    paddingTop: 0,
+    paddingTop: 10,
   },
   cover: {
     width: "100%",
