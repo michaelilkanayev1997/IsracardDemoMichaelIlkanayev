@@ -21,8 +21,11 @@ const TabLayout = () => {
 
   return (
     <Tabs
+      // Avoid white flash on tab switch by keeping inactive screens attached (uses more memory)
+      detachInactiveScreens={false}
       screenOptions={{
         headerShown: false,
+        lazy: false,
         tabBarActiveTintColor: theme.PRIMARY,
         tabBarInactiveTintColor: theme.TEXT_MUTED,
         tabBarStyle: {
