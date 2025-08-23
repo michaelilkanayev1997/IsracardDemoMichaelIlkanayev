@@ -4,11 +4,12 @@ import { StyleSheet, Text, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
+import { useTranslation } from "react-i18next";
+import Animated, { FadeInLeft, FadeInRight } from "react-native-reanimated";
 
 import SortMenu, { SortOption } from "./SortMenu";
 import CustomButton from "./CustomButton";
 import useTheme from "@/hooks/useTheme";
-import { useTranslation } from "react-i18next";
 
 export type ViewModeOptions = "list" | "grid";
 
@@ -37,7 +38,13 @@ const Header: FC<HeaderProps> = ({
     >
       <SafeAreaView edges={["top", "left", "right"]} style={styles.header}>
         <View style={styles.headerContent}>
-          <View style={styles.titleContainer}>
+          <Animated.View
+            style={styles.titleContainer}
+            entering={FadeInLeft.delay(50)
+              .springify()
+              .damping(15)
+              .stiffness(120)}
+          >
             <Ionicons
               name="book-outline"
               size={28}
@@ -46,28 +53,47 @@ const Header: FC<HeaderProps> = ({
             <Text style={[styles.title, { color: theme.TEXT_INVERSE }]}>
               {t("header.title")}
             </Text>
-          </View>
-          <Text style={[styles.subtitle, { color: theme.TEXT_INVERSE_MUTED }]}>
+          </Animated.View>
+
+          {/* Count */}
+          <Animated.Text
+            entering={FadeInLeft.delay(100)
+              .springify()
+              .damping(15)
+              .stiffness(120)}
+            style={[styles.subtitle, { color: theme.TEXT_INVERSE_MUTED }]}
+          >
             {t("header.count", { count })}
-          </Text>
+          </Animated.Text>
         </View>
 
+        {/* Action Buttons */}
         <View style={styles.headerActions}>
-          <SortMenu sortBy={sortBy} onSortChange={onSortChange} />
+          <Animated.View
+            entering={FadeInRight.delay(10).springify().damping(15)}
+          >
+            <SortMenu sortBy={sortBy} onSortChange={onSortChange} />
+          </Animated.View>
 
-          {/* View Toggle Button */}
-          <CustomButton
-            icon={viewMode === "list" ? "grid-outline" : "list-outline"}
-            label={viewMode === "list" ? t("header.grid") : t("header.list")}
-            onPress={onToggleView}
-          />
+          <Animated.View
+            entering={FadeInRight.delay(200).springify().damping(15)}
+          >
+            <CustomButton
+              icon={viewMode === "list" ? "grid-outline" : "list-outline"}
+              label={viewMode === "list" ? t("header.grid") : t("header.list")}
+              onPress={onToggleView}
+            />
+          </Animated.View>
 
-          {/* Settings Button */}
-          <CustomButton
-            icon="settings-outline"
-            label={t("header.settings")}
-            onPress={() => router.push("/settings")}
-          />
+          <Animated.View
+            entering={FadeInRight.delay(300).springify().damping(15)}
+          >
+            <CustomButton
+              icon="settings-outline"
+              label={t("header.settings")}
+              onPress={() => router.push("/settings")}
+            />
+          </Animated.View>
         </View>
       </SafeAreaView>
     </LinearGradient>
