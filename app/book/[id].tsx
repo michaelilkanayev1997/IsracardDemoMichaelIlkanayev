@@ -77,7 +77,7 @@ const BookDetails: FC = () => {
             style={styles.cover}
             placeholder={{ blurhash }}
             contentFit="cover"
-            transition={300} // fade-in
+            transition={0}
             cachePolicy="disk"
           />
 
