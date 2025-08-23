@@ -7,6 +7,8 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  Share,
+  Platform,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -34,6 +36,27 @@ const BookDetails: FC = () => {
 
   const book = cachedBooks.find((book) => book.index.toString() === id);
   const isFavorite = favorites.includes(Number(id));
+
+  const handleShare = async () => {
+    if (!book) return;
+    try {
+      if (Platform.OS === "ios") {
+        await Share.share({
+          message: `${book.title}\n\n${book.description}`,
+          url: book.cover, // iOS supports URL as attachment
+          title: book.title,
+        });
+      } else {
+        // Android ignores url, include cover in message
+        await Share.share({
+          message: `${book.title}\n\n${book.description}\n\n${book.cover}`,
+          title: book.title,
+        });
+      }
+    } catch (error) {
+      console.log("Error sharing:", error);
+    }
+  };
 
   return (
     <SafeAreaView
@@ -106,13 +129,30 @@ const BookDetails: FC = () => {
             />
             <Text
               style={[
-                styles.favoriteText,
+                styles.buttonText,
+                { color: theme.PRIMARY },
                 isFavorite && { color: colors.TEXT_INVERSE },
               ]}
             >
               {isFavorite
                 ? t("bookDetails.favorited")
                 : t("bookDetails.addToFavorites")}
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.shareButton,
+              { backgroundColor: theme.SURFACE, borderColor: theme.PRIMARY },
+            ]}
+            onPress={() => {
+              hapticPress();
+              handleShare();
+            }}
+          >
+            <Ionicons name="share-outline" size={20} color={theme.PRIMARY} />
+            <Text style={[styles.buttonText, { color: theme.PRIMARY }]}>
+              {t("bookDetails.share")}
             </Text>
           </TouchableOpacity>
         </ScrollView>
@@ -163,10 +203,19 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     marginTop: 20,
   },
-  favoriteText: {
+  buttonText: {
     marginLeft: 8,
     fontSize: 16,
     fontWeight: "600",
+  },
+  shareButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingVertical: 12,
+    marginTop: 12,
   },
 });
 

@@ -11,7 +11,8 @@
         "notFound": "הספר לא נמצא במטמון",
         "pages": "{{count}} עמודים",
         "favorited": "נוסף למועדפים",
-        "addToFavorites": "הוסף למועדפים"
+        "addToFavorites": "הוסף למועדפים",
+        "share": "שתף"
     },
     "favorites": {
         "searchPlaceholder": "חיפוש מועדפים...",

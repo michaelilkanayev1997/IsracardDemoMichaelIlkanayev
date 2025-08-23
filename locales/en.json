@@ -11,7 +11,8 @@
         "notFound": "Book not found in cache",
         "pages": "{{count}} pages",
         "favorited": "Favorited",
-        "addToFavorites": "Add to Favorites"
+        "addToFavorites": "Add to Favorites",
+        "share": "Share"
     },
     "favorites": {
         "searchPlaceholder": "Search favorites...",
