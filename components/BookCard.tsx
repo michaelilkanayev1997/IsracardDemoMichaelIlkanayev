@@ -1,6 +1,6 @@
 import { FC, memo } from "react";
 import { View, Text, StyleSheet, Platform, Pressable } from "react-native";
-import Animated, { FadeInDown, FadeOutUp } from "react-native-reanimated";
+import Animated, { FadeInDown, FadeOut } from "react-native-reanimated";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 
@@ -23,8 +23,8 @@ const BookCard: FC<BookCardProps> = memo(
     const isGrid = viewMode === "grid";
     return (
       <Animated.View
-        entering={FadeInDown.springify().damping(15)}
-        exiting={FadeOutUp.duration(250)}
+        entering={FadeInDown.duration(350)}
+        exiting={FadeOut.duration(280)}
         style={[
           styles.card,
           { backgroundColor: theme.SURFACE, shadowColor: theme.TEXT_PRIMARY },
@@ -36,7 +36,7 @@ const BookCard: FC<BookCardProps> = memo(
           style={[styles.image, isGrid && styles.imageGrid]}
           placeholder={{ blurhash }}
           contentFit="cover"
-          transition={300} // fade-in
+          transition={800} // fade-in
           cachePolicy="disk"
         />
 
