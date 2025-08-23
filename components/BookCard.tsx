@@ -1,19 +1,14 @@
 import { FC, memo } from "react";
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  Platform,
-  Pressable,
-} from "react-native";
+import { View, Text, StyleSheet, Platform, Pressable } from "react-native";
 import Animated, { FadeInDown, FadeOutUp } from "react-native-reanimated";
 import { Ionicons } from "@expo/vector-icons";
+import { Image } from "expo-image";
 
 import { Book } from "@/types/Book";
 import { hapticPress } from "@/utils/HapticFeedback";
 import { ViewModeOptions } from "./Header";
 import useTheme from "@/hooks/useTheme";
+import { blurhash } from "@/constants/images";
 
 interface BookCardProps {
   book: Book;
@@ -37,8 +32,12 @@ const BookCard: FC<BookCardProps> = memo(
         ]}
       >
         <Image
-          source={{ uri: book.cover }}
+          source={book.cover}
           style={[styles.image, isGrid && styles.imageGrid]}
+          placeholder={{ blurhash }}
+          contentFit="cover"
+          transition={300} // fade-in
+          cachePolicy="disk"
         />
 
         <View style={[styles.info, isGrid && styles.infoGrid]}>
