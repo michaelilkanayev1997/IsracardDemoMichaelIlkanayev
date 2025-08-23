@@ -1,25 +1,21 @@
 import { FC, useEffect, useMemo, useState } from "react";
-import { FlashList } from "@shopify/flash-list";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Link } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 import { useGetBooksQuery } from "@/slices/booksApiSlice";
 import Loader from "@/components/Loader";
 import ErrorState from "@/components/ErrorState";
-import EmptyState from "@/components/EmptyState";
 import SearchBar from "@/components/SearchBar";
 import Header, { ViewModeOptions } from "@/components/Header";
-import BookCard from "@/components/BookCard";
-import { hapticPress } from "@/utils/HapticFeedback";
 import useDebouncedValue from "@/hooks/useDebouncedValue";
 import { SortOption } from "@/components/SortMenu";
 import { filterBooks, sortBooks } from "@/utils/helper";
 import { setCachedBooks } from "@/slices/booksSlice";
 import { RootState } from "@/store/store";
 import useTheme from "@/hooks/useTheme";
-import { useTranslation } from "react-i18next";
+import BooksFlashList from "@/components/BooksFlashList";
 
 const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
 
@@ -57,7 +53,7 @@ const BooksScreen: FC = () => {
   // Filtering Books
   const filteredBooks = useMemo(
     () => filterBooks(booksToShow, debounced, "title"),
-    [data, debounced]
+    [booksToShow, debounced]
   );
 
   // Sorting Books
@@ -88,39 +84,20 @@ const BooksScreen: FC = () => {
         placeholder={t("books.searchPlaceholder")}
       />
 
-      {/* Main content */}
+      {/* Books List */}
       {isLoading ? (
         <Loader message={t("books.loading")} />
       ) : isError ? (
         <ErrorState message={t("books.error")} onRetry={() => refetch()} />
       ) : (
-        <FlashList
-          key={viewMode}
-          numColumns={viewMode === "grid" ? 2 : 1}
-          data={sortedBooks}
-          keyExtractor={(item) => item.index.toString()}
-          estimatedItemSize={140}
-          showsVerticalScrollIndicator={false}
-          scrollEnabled={sortedBooks.length > 3}
-          contentContainerStyle={styles.listContent}
-          ListEmptyComponent={
-            <EmptyState
-              title={t("books.emptyTitle")}
-              subtitle={t("books.emptySubtitle")}
-              icon="book-outline"
-            />
-          }
-          renderItem={({ item }) => (
-            <Link href={`/book/${item.index}`} asChild>
-              <TouchableOpacity
-                activeOpacity={0.7}
-                onPress={hapticPress}
-                style={viewMode === "grid" && styles.gridItem}
-              >
-                <BookCard book={item} viewMode={viewMode} />
-              </TouchableOpacity>
-            </Link>
-          )}
+        <BooksFlashList
+          books={sortedBooks}
+          viewMode={viewMode}
+          emptyState={{
+            title: t("books.emptyTitle"),
+            subtitle: t("books.emptySubtitle"),
+            icon: "book-outline",
+          }}
         />
       )}
     </SafeAreaView>
@@ -130,12 +107,6 @@ const BooksScreen: FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  listContent: {
-    padding: 16,
-  },
-  gridItem: {
-    marginHorizontal: 6,
   },
 });
 
