@@ -1,8 +1,28 @@
-# Welcome to your Expo app 👋
+# Demo App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+This is a **React Native + Expo** demo application.
 
-## Get started
+---
+
+## Features
+
+- **Two main tabs**
+
+  - 🏠 **Home** – browse a list of books fetched from the API
+  - ⭐ **Favorites** – quickly access the books you’ve saved
+
+- **Book details** – view cover, description, release date, and page count
+- **Share a book** – easily share book details with others
+- **Search books** – search with debounce
+- **Sort options** – organize the list by A–Z, number of pages, or release date
+- **Grid/List toggle** – switch between views with smooth animations
+- **Persistent storage** – books are saved locally for 24 hours
+- **Dark/Light mode** – toggle themes instantly
+- **Multi-language support** – switch app language (English, Russian, Hebrew)
+
+---
+
+## 🚀 Get started
 
 1. Install dependencies
 
@@ -10,41 +30,70 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
    npm install
    ```
 
-2. Start the app
+2. Start the app (with Expo)s
 
    ```bash
    npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+---
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## 📱 Running the App
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+When you start the project, **Expo CLI** will give you options to:
 
-## Get a fresh project
+- Run the app on an **Android emulator**
+- Run the app on an **iOS simulator** (Mac only)
+- Scan the **QR code** to open the app in **Expo Go** on your device
 
-When you're ready, run:
+---
+
+## ⚙️ EAS Build Setup
+
+### **Setup**
+
+1. Install the Expo CLI and EAS CLI:
+
+   ```bash
+   npm install -g eas-cli
+   ```
+
+2. Log in to your Expo account:
+
+   ```
+   eas login
+   ```
+
+3. Configure EAS for the project:
+
+   ```
+   eas build:configure
+   ```
+
+---
+
+## 📦 Building the App
+
+- For Android (APK/AAB):
+
+  ```
+  eas build --profile preview --platform android
+  ```
+
+- For iOS (IPA):
+
+  ```
+  eas build --platform ios --profile production
+  ```
+
+---
+
+## 🌐 React Native Packager Hostname (Windows)
+
+If running the app on a physical device, set your computer's IP as the Metro bundler host:
 
 ```bash
-npm run reset-project
+setx /M REACT_NATIVE_PACKAGER_HOSTNAME my-ip
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- Replace my-ip with your machine’s local IP (find it via ipconfig).
