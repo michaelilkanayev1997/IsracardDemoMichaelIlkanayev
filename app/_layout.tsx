@@ -1,10 +1,12 @@
-import { Stack } from "expo-router";
+import { SplashScreen, Stack } from "expo-router";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { I18nManager, Platform } from "react-native";
 import * as SystemUI from "expo-system-ui";
+import { useFonts } from "expo-font";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 import store, { persistor } from "@/store/store";
 import Loader from "@/components/Loader";
@@ -14,6 +16,8 @@ import useLanguageSync from "@/hooks/useLanguageSync";
 // Hard-disable RTL before any UI mounts
 I18nManager.allowRTL(false);
 I18nManager.forceRTL(false);
+
+SplashScreen.preventAutoHideAsync();
 
 const AppNavigator = () => {
   const { theme, isDark } = useTheme();
@@ -25,6 +29,20 @@ const AppNavigator = () => {
       SystemUI.setBackgroundColorAsync(theme.BACKGROUND);
     }
   }, [theme, isDark]);
+
+  const [loaded, error] = useFonts({
+    ...Ionicons.font, // preload Ionicons font
+  });
+
+  useEffect(() => {
+    if (loaded || error) {
+      SplashScreen.hide();
+    }
+  }, [loaded]);
+
+  if (!loaded && !error) {
+    return null;
+  }
 
   return (
     <>
