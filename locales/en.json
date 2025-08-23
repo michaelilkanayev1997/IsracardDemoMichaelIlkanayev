@@ -46,5 +46,9 @@
             "date": "Date"
         },
         "modalTitle": "Sort by"
+    },
+    "tabs": {
+        "home": "Home",
+        "favorites": "Favorites"
     }
 }

@@ -3,6 +3,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import type { BottomTabBarButtonProps } from "@react-navigation/bottom-tabs";
+import { useTranslation } from "react-i18next";
 
 import useTheme from "@/hooks/useTheme";
 
@@ -17,6 +18,7 @@ const NoRippleButton = (props: BottomTabBarButtonProps) => {
 
 const TabLayout = () => {
   const { theme } = useTheme();
+  const { t } = useTranslation();
   const insets = useSafeAreaInsets();
 
   return (
@@ -46,7 +48,7 @@ const TabLayout = () => {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Home",
+          title: t("tabs.home"),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="home" size={size} color={color} />
           ),
@@ -55,7 +57,7 @@ const TabLayout = () => {
       <Tabs.Screen
         name="favorites"
         options={{
-          title: "Favorites",
+          title: t("tabs.favorites"),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="heart" size={size} color={color} />
           ),
