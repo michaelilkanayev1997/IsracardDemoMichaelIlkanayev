@@ -1,6 +1,7 @@
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import type { BottomTabBarButtonProps } from "@react-navigation/bottom-tabs";
 
 import useTheme from "@/hooks/useTheme";
@@ -16,6 +17,7 @@ const NoRippleButton = (props: BottomTabBarButtonProps) => {
 
 const TabLayout = () => {
   const { theme } = useTheme();
+  const insets = useSafeAreaInsets();
 
   return (
     <Tabs
@@ -27,6 +29,12 @@ const TabLayout = () => {
           backgroundColor: theme.SURFACE,
           borderTopColor: theme.BORDER,
           borderTopWidth: 0.8,
+          height: 65 + insets.bottom,
+          paddingTop: 6,
+        },
+        tabBarLabelStyle: {
+          fontSize: 12,
+          fontWeight: "600",
         },
         tabBarHideOnKeyboard: true,
         tabBarButton: (props) => <NoRippleButton {...props} />,

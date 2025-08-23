@@ -3,13 +3,17 @@ import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
-import { Platform } from "react-native";
+import { I18nManager, Platform } from "react-native";
 import * as SystemUI from "expo-system-ui";
 
 import store, { persistor } from "@/store/store";
 import Loader from "@/components/Loader";
 import useTheme from "@/hooks/useTheme";
 import useLanguageSync from "@/hooks/useLanguageSync";
+
+// Hard-disable RTL before any UI mounts
+I18nManager.allowRTL(false);
+I18nManager.forceRTL(false);
 
 const AppNavigator = () => {
   const { theme, isDark } = useTheme();

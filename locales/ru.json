@@ -11,7 +11,8 @@
         "notFound": "Книга не найдена в кеше",
         "pages": "{{count}} страниц",
         "favorited": "В избранном",
-        "addToFavorites": "Добавить в избранное"
+        "addToFavorites": "Добавить в избранное",
+        "share": "Поделиться"
     },
     "favorites": {
         "searchPlaceholder": "Поиск избранного...",
