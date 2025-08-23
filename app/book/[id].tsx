@@ -3,26 +3,25 @@ import { useLocalSearchParams } from "expo-router";
 import {
   View,
   Text,
-  Image,
   StyleSheet,
   ScrollView,
-  TouchableOpacity,
   Share,
   Platform,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
+import { useTranslation } from "react-i18next";
+import { Image } from "expo-image";
 
 import { toggleFavorite } from "@/slices/booksSlice";
-import colors from "@/constants/colors";
 import Loader from "@/components/Loader";
 import ErrorState from "@/components/ErrorState";
-import { hapticPress } from "@/utils/HapticFeedback";
 import { RootState } from "@/store/store";
 import useTheme from "@/hooks/useTheme";
 import BackButton from "@/components/BackButton";
-import { useTranslation } from "react-i18next";
+import ActionButton from "@/components/ActionButton";
+import { blurhash } from "@/constants/images";
 
 const BookDetails: FC = () => {
   const { id } = useLocalSearchParams();
@@ -73,7 +72,14 @@ const BookDetails: FC = () => {
           contentContainerStyle={styles.container}
           showsVerticalScrollIndicator={false}
         >
-          <Image source={{ uri: book.cover }} style={styles.cover} />
+          <Image
+            source={book.cover}
+            style={styles.cover}
+            placeholder={{ blurhash }}
+            contentFit="cover"
+            transition={300} // fade-in
+            cachePolicy="disk"
+          />
 
           <Text style={[styles.title, { color: theme.TEXT_PRIMARY }]}>
             {book.title}
@@ -109,52 +115,23 @@ const BookDetails: FC = () => {
           </Text>
 
           {/* Favorite button */}
-          <TouchableOpacity
-            style={[
-              styles.favoriteButton,
-              {
-                backgroundColor: isFavorite ? theme.PRIMARY : theme.SURFACE,
-                borderColor: theme.PRIMARY,
-              },
-            ]}
-            onPress={() => {
-              hapticPress();
-              dispatch(toggleFavorite(book.index));
-            }}
-          >
-            <Ionicons
-              name={isFavorite ? "heart" : "heart-outline"}
-              size={20}
-              color={isFavorite ? colors.TEXT_INVERSE : colors.PRIMARY}
-            />
-            <Text
-              style={[
-                styles.buttonText,
-                { color: theme.PRIMARY },
-                isFavorite && { color: colors.TEXT_INVERSE },
-              ]}
-            >
-              {isFavorite
+          <ActionButton
+            icon={isFavorite ? "heart" : "heart-outline"}
+            label={
+              isFavorite
                 ? t("bookDetails.favorited")
-                : t("bookDetails.addToFavorites")}
-            </Text>
-          </TouchableOpacity>
+                : t("bookDetails.addToFavorites")
+            }
+            onPress={() => dispatch(toggleFavorite(book.index))}
+            active={isFavorite}
+          />
 
-          <TouchableOpacity
-            style={[
-              styles.shareButton,
-              { backgroundColor: theme.SURFACE, borderColor: theme.PRIMARY },
-            ]}
-            onPress={() => {
-              hapticPress();
-              handleShare();
-            }}
-          >
-            <Ionicons name="share-outline" size={20} color={theme.PRIMARY} />
-            <Text style={[styles.buttonText, { color: theme.PRIMARY }]}>
-              {t("bookDetails.share")}
-            </Text>
-          </TouchableOpacity>
+          {/* Share button */}
+          <ActionButton
+            icon="share-outline"
+            label={t("bookDetails.share")}
+            onPress={handleShare}
+          />
         </ScrollView>
       )}
     </SafeAreaView>
@@ -193,29 +170,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     lineHeight: 22,
     marginVertical: 16,
-  },
-  favoriteButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingVertical: 12,
-    marginTop: 20,
-  },
-  buttonText: {
-    marginLeft: 8,
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  shareButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingVertical: 12,
-    marginTop: 12,
   },
 });
 
